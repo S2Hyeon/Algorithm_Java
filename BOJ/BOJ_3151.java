@@ -24,41 +24,28 @@ public class BOJ_3151 {
 
         Arrays.sort(students);
 
-        comb(0, 0);
+        for(int i = 0; i < N - 2; i++) {
+            for(int j = i + 1; j < N - 1; j++) {
+                int sum = students[i] + students[j]; // 2명의 학생 먼저 뽑기
+
+                // 나머지 한 명은 이분탐색으로
+                // 중복된 숫자가 있으므로 lowerBound와 upperBound를 구한 뒤
+                int lower = lowerBound(j + 1, N, -sum);
+                int upper = upperBound(j + 1, N, -sum);
+
+                // 결과 갯수만큼 답에 더해준다.
+                answer += upper - lower;
+            }
+        }
 
         System.out.println(answer);
     }
 
-    private static void comb(int cnt, int r) {
-        if(r == 2) { // 조합으로 2명의 학생 뽑기
-            int left = cnt;
-            int right = N;
-            int sum = selectedNums[0] + selectedNums[1];
-
-            // 나머지 1명의 학생은 이분탐색으로 뽑는다.
-            int lower = lowerBound(left, right, sum);
-            int upper = upperBound(left, right, sum);
-
-            // 0을 만들 수 있는 경우에만 답에 더해준다.
-            if(lower != -1 && upper != -1) {
-                answer += upper - lower + 1;
-            }
-            return;
-        }
-
-        if(cnt >= N) return;
-
-        selectedNums[r] = students[cnt];
-        comb(cnt + 1, r + 1);
-        comb(cnt + 1, r);
-    }
-
-    private static int lowerBound(int left, int right, int sum) {
+    private static int lowerBound(int left, int right, int key) {
         while(left < right) {
             int mid = (left + right) / 2;
-            int result = sum + students[mid];
 
-            if(result < 0) {
+            if(students[mid] < key) {
                 left = mid + 1;
             }
             else {
@@ -66,21 +53,15 @@ public class BOJ_3151 {
             }
         }
 
-        // 값을 찾지 못한 경우 left가 N까지 이동하므로 이 경우를 제외한다.
-        if(left < N && sum + students[left] == 0) {
-            return left;
-        }
-
-        return -1;
+        return right;
 
     }
 
-    private static int upperBound(int left, int right, int sum) {
+    private static int upperBound(int left, int right, int key) {
         while(left < right) {
             int mid = (left + right) / 2;
-            int result = sum + students[mid];
 
-            if(result <= 0) {
+            if(students[mid] <= key) {
                 left = mid + 1;
             }
             else {
@@ -88,13 +69,7 @@ public class BOJ_3151 {
             }
         }
 
-        // upperBound값을 찾은것이므로 -1을 해주어야 한다.
-        // 만약 값을 찾지 못한 경우에도 left(== N) - 1이기 때문에 범위 초과가 나지 않는다.
-        if(sum + students[left - 1] == 0) {
-            return left - 1;
-        }
-
-        return -1;
+        return right;
     }
 
 }
