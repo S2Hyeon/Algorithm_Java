@@ -17,6 +17,7 @@ public class BOJ_2234 {
             this.col = col;
         }
     }
+
     static int N, M, maxSize;
     static int[][] map; // 원본 맵
     static int[][] areaMap; // 지역 번호를 표기할 맵
@@ -34,31 +35,33 @@ public class BOJ_2234 {
         areaInfo = new HashMap<>();
         int maxMergeSize = 0;
 
-        for(int i = 0; i < M; i++) {
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < N; j++) {
+            for (int j = 0; j < N; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
         int areaNumber = 1;
-        for(int i = 0; i < M; i++) {
-            for(int j = 0 ; j < N; j++) {
-                if(!visited[i][j]) {
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (!visited[i][j]) {
                     bfs(i, j, areaNumber++);
                 }
             }
         }
 
         // 순차 탐색하면서 오른쪽 혹은 아래에 다른 숫자가 있을 때 두 숫자 지역의 크기 합치기
-        for(int i = 0; i < M; i++) {
-            for(int j = 0; j < N; j++) {
-                if(isIn(i, j + 1) && areaMap[i][j] != areaMap[i][j + 1]) {
-                    maxMergeSize = Math.max(maxMergeSize, areaInfo.get(areaMap[i][j]) + areaInfo.get(areaMap[i][j + 1]));
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (isIn(i, j + 1) && areaMap[i][j] != areaMap[i][j + 1]) {
+                    maxMergeSize = Math.max(maxMergeSize,
+                            areaInfo.get(areaMap[i][j]) + areaInfo.get(areaMap[i][j + 1]));
                 }
 
-                if(isIn(i + 1, j) && areaMap[i][j] != areaMap[i + 1][j]) {
-                    maxMergeSize = Math.max(maxMergeSize, areaInfo.get(areaMap[i][j]) + areaInfo.get(areaMap[i + 1][j]));
+                if (isIn(i + 1, j) && areaMap[i][j] != areaMap[i + 1][j]) {
+                    maxMergeSize = Math.max(maxMergeSize,
+                            areaInfo.get(areaMap[i][j]) + areaInfo.get(areaMap[i + 1][j]));
                 }
             }
         }
@@ -76,23 +79,20 @@ public class BOJ_2234 {
         int[] dx = {0, -1, 0, 1}; // 서 북 동 남
         int[] dy = {-1, 0, 1, 0};
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             Position position = queue.poll();
             count++;
             int curRow = position.row;
             int curCol = position.col;
             areaMap[curRow][curCol] = areaNumber;
             int wallInfo = map[curRow][curCol];
-            for(int i = 0; i < 4; i++) {
-                if((wallInfo & (1 << i)) == 0) { // 벽이 없는 곳이라면
+            for (int i = 0; i < 4; i++) {
+                if ((wallInfo & (1 << i)) == 0) { // 벽이 없는 곳이라면
                     int nextRow = curRow + dx[i];
                     int nextCol = curCol + dy[i];
-                    int nextWallInfo = map[nextRow][nextCol];
-                    if((nextWallInfo & (1 << ((i + 2) % 4))) == 0) { // 다음 칸에도 현재 칸에 맞닿아 있는 벽이 없다면
-                        if(isIn(nextRow, nextCol) && !visited[nextRow][nextCol]) {
-                            queue.offer(new Position(nextRow, nextCol));
-                            visited[nextRow][nextCol] = true;
-                        }
+                    if (isIn(nextRow, nextCol) && !visited[nextRow][nextCol]) {
+                        queue.offer(new Position(nextRow, nextCol));
+                        visited[nextRow][nextCol] = true;
                     }
                 }
             }
