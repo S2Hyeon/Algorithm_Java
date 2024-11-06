@@ -110,13 +110,7 @@ public class BOJ_2143 {
         }
 
         if(found) {
-            // Upper Bound는 키 값보다 커지는 첫 원소의 인덱스를 반환한다.
-            // 만약 키 값이 연속되어 배열의 끝까지 다다른다면 left + 1을 하여 개수를 세어야 한다.
-            if(left == listB.size() - 1 && listB.get(listB.size() - 2).equals(listB.get(listB.size() - 1))) {
-                left++;
-            }
             return left;
-
         } else {
             return -1;
         }
