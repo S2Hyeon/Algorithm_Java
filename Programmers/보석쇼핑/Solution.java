@@ -1,5 +1,6 @@
 package 보석쇼핑;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,14 +13,11 @@ public class Solution {
 
     public int[] solution(String[] gems) {
         int[] answer = new int[2];
-        Set<String> set = new HashSet<>();
         Map<String, Integer> amountOfGems = new HashMap<>();
         int length = Integer.MAX_VALUE;
 
         // 보석 종류 구하기
-        for(int i = 0; i < gems.length; i++) {
-            set.add(gems[i]);
-        }
+        Set<String> set = new HashSet<>(Arrays.asList(gems));
 
         int kind = set.size();
         left = right = 0;
